@@ -1,4 +1,4 @@
-nom,prenom,age,taille,poids,sexe,sport_licence,niveau_etude,region,smoker,nationalité_francaise,revenu_estime_mois,situation_familiale,historique_credits,risque_personnel,date_creation_compte,score_credit,loyer_mensuel,montant_pret
+nom,prenom,age,taille,poids,sexe,sport_licence,niveau_etude,region,smoker,nationalite_francaise,revenu_estime_mois,situation_familiale,historique_credits,risque_personnel,date_creation_compte,score_credit,loyer_mensuel,montant_pret
 Foster,Steven,19,175.0,62.5,H,non,bac,Île-de-France,oui,oui,4958,veuf,,0.19,2021-04-04,,,500.0
 Tapia,Todd,31,190.0,63.5,H,oui,bac+2,Corse,non,oui,3001,veuf,,0.93,2023-03-19,,1270.84,786.595928525307
 Hardy,Michelle,68,174.6,66.5,H,oui,doctorat,Auvergne-Rhône-Alpes,oui,oui,3758,,,0.68,2024-08-27,576.0,,29093.676396627423

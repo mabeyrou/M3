@@ -1,32 +1,13 @@
 services:
-  database:
-    image: alpine/sqlite:latest
-    volumes:
-      - db_data:/data
-    command: tail -f /dev/null 
-    networks:
-      - app-network
-
-  api:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    depends_on:
-      - database
     volumes:
       - .:/app
-      - db_data:/db_volume
+      - ./data:/app/data
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+    environment:
+      - DATABASE_URL=sqlite:////app/data/app.db
     command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-    networks:
-      - app-network
-
-volumes:
-  db_data:
-
-networks:
-  app-network:
-    driver: bridge
