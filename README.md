@@ -5,6 +5,8 @@ Le projet peut être lancé depuis un container. Pour cela il faut d'abord copie
 ```bash
 cp .env.example .env
 ```
+Il faudra ensuite compléter les variables d'environnement manquantes.  
+
 Il faut ensuite monter le container et le lancer :
 ```bash
 docker compose build
