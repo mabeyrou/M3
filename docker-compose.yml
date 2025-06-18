@@ -6,8 +6,22 @@ services:
     volumes:
       - .:/app
       - ./data:/app/data
+      # - ./mlruns:/app/mlruns
     ports:
       - "8000:8000"
     environment:
       - DATABASE_URL=sqlite:////app/data/app.db
+      # - MLFLOW_TRACKING_URI=file:///app/mlruns
     command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  mlflow-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./mlruns:/app/mlruns
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=file:///app/mlruns
+    command: ["mlflow", "ui", "--host", "0.0.0.0", "--port", "5000"]

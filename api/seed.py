@@ -1,9 +1,9 @@
 import pandas as pd
-from sqlalchemy import text
-from .database import engine, SessionLocal, create_db_tables
-from .models import *
 
-def import_csv_to_db(csv_path, table_name, if_exists='replace'):
+from api.database import engine, create_db_tables
+from api.models import *
+
+def import_csv_to_db(csv_path, table_name, if_exists='append'):
     """
     Importe un CSV directement en base
     
@@ -14,10 +14,13 @@ def import_csv_to_db(csv_path, table_name, if_exists='replace'):
     """
     try:
         df = pd.read_csv(csv_path)
-        df.insert(0, 'id', range(1, len(df) + 1))
-        colonnes_bool = ['smoker', 'sport_licence', 'nationalite_francaise']
-        df = df.assign(**{col: df[col].str.lower().map(convert_to_bool) for col in colonnes_bool})
-        df = df.drop(columns=['nom', 'prenom', 'date_creation_compte'])
+
+        oui_non_cols = get_oui_non_columns(df)
+        prohibited_cols = ['nom', 'prenom', 'nationalité_francaise'] # colonnes enfreignant la RGPD
+
+        df = df.assign(**{col: df[col].str.lower().map(convert_to_bool) for col in oui_non_cols})
+        df = df.drop(columns=prohibited_cols)
+        df['date_creation_compte'] = pd.to_datetime(df['date_creation_compte'], errors='coerce')
         
         df.to_sql(
             table_name,
@@ -43,21 +46,18 @@ def convert_to_bool(value):
     
     return str(value).lower().strip() == 'oui'
 
-def clear_table(table_name):
-    """Vide une table"""
-    db = SessionLocal()
-    try:
-        db.execute(text(f"DELETE FROM {table_name}"))
-        db.commit()
-        print(f"🗑️  Table {table_name} vidée")
-    except Exception as e:
-        db.rollback()
-        print(f"❌ Erreur lors du vidage: {e}")
-        raise
-    finally:
-        db.close()
+def get_oui_non_columns(df):
+    """
+    Retourne les colonnes booléennes du DataFrame
+    """
+    oui_non_columns = []
+    for col in df.columns:
+        unique_values = df[col].dropna().unique()
+        if set(unique_values).issubset({'oui', 'non'}):
+            oui_non_columns.append(col)
+    return oui_non_columns
 
-def seed_database():
+def seed_database(csv_path, table):
     """
     Fonction principale de seeding
     """
@@ -66,7 +66,7 @@ def seed_database():
     create_db_tables()
     
     try:
-        import_csv_to_db('data/raw_data.csv', 'clients')
+        import_csv_to_db(csv_path, table, if_exists='append')
         
         print("✅ Seeding terminé avec succès!")
         
@@ -74,4 +74,10 @@ def seed_database():
         print(f"❌ Erreur durant le seeding: {e}")
 
 if __name__ == "__main__":
-    seed_database()
+    print(f"{' Seeding ':=^60}")
+    print("Précisez le chemin vers le fichier CSV :")
+    csv_path = input().strip()
+    print("Précisez la table de destination :")
+    table = input().strip()
+    seed_database(csv_path, table)
+    print(f"{' Fin du seeding ':=^60}")

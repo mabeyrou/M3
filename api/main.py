@@ -1,8 +1,9 @@
 from contextlib import asynccontextmanager
 from loguru import logger
 from fastapi import FastAPI
-from .routes import router
-from .database import create_db_tables
+
+from api.routes import router
+from api.database import create_db_tables
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
