@@ -1,0 +1,10 @@
+artifact_location: file:///home/marou/Formation/Module3/M3/mlruns/156690167074593530/models/m-f9e3c712621048bba39342e1b4230a9a/artifacts
+creation_timestamp: 1750372201836
+experiment_id: '156690167074593530'
+last_updated_timestamp: 1750372203785
+model_id: m-f9e3c712621048bba39342e1b4230a9a
+model_type: null
+name: model
+source_run_id: dc88e35c71424ab39d8d054e707bece5
+status: 2
+status_message: null

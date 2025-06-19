@@ -3,6 +3,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
+import pandas as pd
+
+from api.utils.helpers import replace_by_dict
 
 def split(X, y, test_size=0.2, random_state=42):
     '''
@@ -34,19 +37,37 @@ def preprocessing(df):
     - y : variable cible
     - preprocessor : objet de prétraitement pour une utilisation ultérieure
     '''
-    # Suppression des colonnes inutiles pour la DB
-    # cols_to_delete = ['id', 'sexe', 'nationalité_francaise']
-    # Suppression des colonnes inutiles pour le csv
-    cols_to_drop = ['sexe', 'nationalité_francaise', 'nom', 'prenom', 'date_creation_compte']
-    numerical_cols = ['age', 'taille', 'poids', 'revenu_estime_mois', 'historique_credits', 'risque_personnel', 'score_credit', 'loyer_mensuel',]
-    categorical_cols = ['sport_licence', 'niveau_etude', 'region', 'smoker', 'situation_familiale']
-
+    # Suppressions des colonnes sensibles et sans justifiation métier
+    cols_to_drop = ['id', 'sexe', 'taille', 'poids', 'smoker']
     for col in cols_to_drop:
         if col not in df.columns:
             print(f"Column '{col}' not found in DataFrame.")
         else:
             print(f"Column '{col}' will be dropped.")
             df = df.drop(columns=col)
+
+    # Catégorisation de l'âge
+    bins = [17, 30, 45, 60, 100]
+    labels = ['18-29', '30-44', '45-59', '60+']
+    df['age_group'] = pd.cut(df['age'], bins=bins, labels=labels, right=True)
+    df= df.drop(columns='age')
+
+    # Regroupement des régions
+    economy_based_regions = {
+    'region_parisienne' : ['Île-de-France'],
+    'regions_industrielles': ['Hauts-de-France', 'Grand-Est', 'Bourgogne-Franche-Comté'],
+    'regions_tertiaires': ['Bretagne', 'Pays-de-la-Loire', 'Centre-Val-de-Loire', 'Normandie'],
+    'regions_touristiques_services': ['Nouvelle-Aquitaine', 'Occitanie', 'Auvergne-Rhône-Alpes', 'PACA', 'Corse'],
+    }
+    df['region'] = df['region'].apply(lambda x: replace_by_dict(x, economy_based_regions))
+
+    numerical_cols = ['revenu_estime_mois', 'historique_credits', 'risque_personnel', 'score_credit', 'loyer_mensuel',]
+    categorical_cols = ['age_group', 'sport_licence', 'niveau_etude', 'region', 'situation_familiale']
+
+    # Valeurs aberrantes
+    df['loyer_mensuel'] = df['loyer_mensuel'].mask(df['loyer_mensuel'] < 0) # seule colonne avec des valeurs négatives
+    
+    df.rename(str, axis='columns', inplace=True)  # Assure que les noms de colonnes sont des chaînes de caractères
 
     # imputer : Pour les valeurs numériques, on complète les valeurs manquantes par la moyenne des valeurs présentes
     # scaler : Normalisation des données

@@ -10,7 +10,6 @@ from os.path import join
 from datetime import datetime
 
 # Chargement des datasets
-# df = pd.read_csv(join('data','raw_data.csv'))
 df = pd.read_sql_table(table_name='clients', con=engine)
 
 # Charger le préprocesseur

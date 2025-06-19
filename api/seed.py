@@ -20,11 +20,12 @@ def import_csv_to_db(csv_path, table_name, if_exists='append'):
 
         df = df.assign(**{col: df[col].str.lower().map(convert_to_bool) for col in oui_non_cols})
         df = df.drop(columns=prohibited_cols)
+        
         df['date_creation_compte'] = pd.to_datetime(df['date_creation_compte'], errors='coerce')
         
         df.to_sql(
-            table_name,
-            engine,
+            name=table_name,
+            con=engine,
             if_exists=if_exists,
             index=False,
             method='multi',

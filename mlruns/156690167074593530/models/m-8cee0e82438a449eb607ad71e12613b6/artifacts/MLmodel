@@ -1,0 +1,24 @@
+artifact_path: file:///home/marou/Formation/Module3/M3/mlruns/156690167074593530/models/m-8cee0e82438a449eb607ad71e12613b6/artifacts
+flavors:
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.0
+is_signature_from_type_hint: false
+mlflow_version: 3.1.0
+model_id: m-8cee0e82438a449eb607ad71e12613b6
+model_size_bytes: 1400
+model_uuid: m-8cee0e82438a449eb607ad71e12613b6
+prompts: null
+run_id: dc88e35c71424ab39d8d054e707bece5
+signature:
+  inputs: '[{"type": "string", "name": "age_group", "required": true}, {"type": "boolean",
+    "name": "sport_licence", "required": true}, {"type": "string", "name": "niveau_etude",
+    "required": true}, {"type": "string", "name": "region", "required": true}, {"type":
+    "string", "name": "situation_familiale", "required": false}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1,
+    21]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-06-19 22:30:03.939375'

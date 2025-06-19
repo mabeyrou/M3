@@ -1,0 +1,11 @@
+digest: 8df93da5
+name: dataset
+profile: '{"num_rows": 10000, "num_elements": 50000}'
+schema: '{"mlflow_colspec": [{"type": "double", "name": "revenu_estime_mois", "required":
+  true}, {"type": "double", "name": "historique_credits", "required": false}, {"type":
+  "double", "name": "risque_personnel", "required": true}, {"type": "double", "name":
+  "score_credit", "required": false}, {"type": "double", "name": "loyer_mensuel",
+  "required": false}]}'
+source: '{"tags": {"mlflow.user": "marou", "mlflow.source.name": "/home/marou/Formation/Module3/M3/api/scripts/training.py",
+  "mlflow.source.type": "LOCAL", "mlflow.source.git.commit": "d55666819db238aa2b7ce001413099e3218ca0a6"}}'
+source_type: code
