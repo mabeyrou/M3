@@ -14,6 +14,7 @@ from api.database import engine
 df = pd.read_sql_table(table_name='clients', con=engine)
 
 preprocessor_loaded = joblib.load(join('.', 'models','preprocessor.pkl'))
+ethically_loose_preprocessor_loaded = joblib.load(join('.', 'models','ethically_loose_preprocessor.pkl'))
 
 mlflow.set_experiment("Training loan prediction model with data from brief 0")
 mlflow.autolog()
@@ -32,7 +33,7 @@ with mlflow.start_run():
     mlflow.log_metric("MSE", perf['MSE'])
     mlflow.log_metric("MAE", perf['MAE'])
 
-    mlflow.set_tag("Data Processing Info", "Strict ethical preprocessing")
+    mlflow.set_tag("Data Processing Info", "Ethically strict preprocessing")
     mlflow.set_tag("Training Info", "50 epochs")
 
     signature = infer_signature(X_train, model_predict(model, X_train))
@@ -44,8 +45,7 @@ with mlflow.start_run():
         input_example=X_train,
         registered_model_name="loan-prediction-ethical-model",
     )
-
-
+    
     # sauvegarder le modèle
     model_name = f"model_{datetime.now().strftime('%Y_%m_%d_%H_%M')}.keras"
     model.save(join('.', 'models', model_name))

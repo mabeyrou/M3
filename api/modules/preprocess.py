@@ -1,4 +1,4 @@
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.preprocessing import StandardScaler, OneHotEncoder, QuantileTransformer
 from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
@@ -61,7 +61,7 @@ def preprocessing(df):
     }
     df['region'] = df['region'].apply(lambda x: replace_by_dict(x, economy_based_regions))
 
-    numerical_cols = ['revenu_estime_mois', 'historique_credits', 'risque_personnel', 'score_credit', 'loyer_mensuel',]
+    numerical_cols = ['revenu_estime_mois', 'risque_personnel', 'loyer_mensuel', 'historique_credits', 'score_credit',]
     categorical_cols = ['age_group', 'sport_licence', 'niveau_etude', 'region', 'situation_familiale']
 
     # Valeurs aberrantes
@@ -69,15 +69,47 @@ def preprocessing(df):
     
     df.rename(str, axis='columns', inplace=True)  # Assure que les noms de colonnes sont des chaînes de caractères
 
-    # imputer : Pour les valeurs numériques, on complète les valeurs manquantes par la moyenne des valeurs présentes
-    # scaler : Normalisation des données
     num_pipeline = Pipeline([
         ('imputer', SimpleImputer(strategy='mean')), 
         ('scaler', StandardScaler())
     ])
 
-    # imputer : Pour les valeurs catégorielles, on complète les valeurs manquantes par la valeur la plus fréquente
-    # encoder : Transformation des catégories au format binaire (chaque catégorie correspond à une nouvelle colonne)
+    cat_pipeline = Pipeline([
+        ('imputer', SimpleImputer(strategy='most_frequent')),
+        ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
+    ])
+
+    preprocessor = ColumnTransformer([
+        ('num', num_pipeline, numerical_cols),
+        ('cat', cat_pipeline, categorical_cols)
+    ])
+
+    # Prétraitement
+    X = df.drop(columns=['montant_pret'])
+    y = df['montant_pret']
+
+    # Fit all transformers, transform the data and concatenate results.
+    X_processed = preprocessor.fit_transform(X)
+    return X_processed, y, preprocessor
+
+def ethically_loose_preprocessing(df):
+    # Suppressions des colonnes sensibles et sans justifiation métier
+    cols_to_drop = ['id', 'score_credit', 'historique_credits', ]
+    df = df.drop(columns=cols_to_drop)
+
+    numerical_cols = ['age', 'taille', 'poids', 'revenu_estime_mois', 'risque_personnel', 'loyer_mensuel',]
+    categorical_cols = ['sexe', 'smoker', 'sport_licence', 'niveau_etude', 'region', 'situation_familiale']
+
+    # Valeurs aberrantes
+    df['loyer_mensuel'] = df['loyer_mensuel'].mask(df['loyer_mensuel'] < 0) # seule colonne avec des valeurs négatives
+    
+    df.rename(str, axis='columns', inplace=True)  # Assure que les noms de colonnes sont des chaînes de caractères
+
+    num_pipeline = Pipeline([
+        ('imputer', SimpleImputer(strategy='mean')), 
+        ('scaler', StandardScaler())
+    ])
+
     cat_pipeline = Pipeline([
         ('imputer', SimpleImputer(strategy='most_frequent')),
         ('encoder', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
