@@ -39,6 +39,7 @@ def preprocessing(df):
     '''
     # Suppressions des colonnes sensibles et sans justifiation métier
     cols_to_drop = ['id', 'sexe', 'taille', 'poids', 'smoker']
+
     for col in cols_to_drop:
         if col not in df.columns:
             print(f"Column '{col}' not found in DataFrame.")
@@ -61,8 +62,21 @@ def preprocessing(df):
     }
     df['region'] = df['region'].apply(lambda x: replace_by_dict(x, economy_based_regions))
 
+    # Transformation de la colonne date_creation_compte en anciennete_mois'
+    df['date_creation_compte'] = pd.to_datetime(df['date_creation_compte'], errors='coerce')
+    df['anciennete_mois'] = ((pd.Timestamp.now() - df['date_creation_compte']) / pd.Timedelta(days=30)).astype(int)
+    df= df.drop(columns='date_creation_compte')
+
+    # Création de colonnes pour les valeurs manquantes
+    df['historique_credits_missing_value'] = df['historique_credits'].isna().astype(int)
+    df['score_credit_missing_value'] = df['score_credit'].isna().astype(int)
+    df['loyer_mensuel_missing_value'] = df['loyer_mensuel'].isna().astype(int)
+    df['situation_familiale_missing_value'] = df['situation_familiale'].isna().astype(int)
+
     numerical_cols = ['revenu_estime_mois', 'risque_personnel', 'loyer_mensuel', 'historique_credits', 'score_credit',]
-    categorical_cols = ['age_group', 'sport_licence', 'niveau_etude', 'region', 'situation_familiale']
+    categorical_cols = ['age_group', 'sport_licence', 'niveau_etude', 'region', 'situation_familiale', 'anciennete_mois',
+                         'historique_credits_missing_value', 'score_credit_missing_value', 'loyer_mensuel_missing_value', 
+                         'situation_familiale_missing_value']
 
     # Valeurs aberrantes
     df['loyer_mensuel'] = df['loyer_mensuel'].mask(df['loyer_mensuel'] < 0) # seule colonne avec des valeurs négatives

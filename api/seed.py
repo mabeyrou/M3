@@ -15,11 +15,11 @@ def import_csv_to_db(csv_path, table_name, if_exists='append'):
     try:
         df = pd.read_csv(csv_path)
 
-        oui_non_cols = get_oui_non_columns(df)
         prohibited_cols = ['nom', 'prenom', 'nationalité_francaise'] # colonnes enfreignant la RGPD
-
-        df = df.assign(**{col: df[col].str.lower().map(convert_to_bool) for col in oui_non_cols})
         df = df.drop(columns=prohibited_cols)
+
+        oui_non_cols = get_oui_non_columns(df)
+        df = df.assign(**{col: df[col].str.lower().map(convert_to_bool) for col in oui_non_cols})
         
         df['date_creation_compte'] = pd.to_datetime(df['date_creation_compte'], errors='coerce')
         
