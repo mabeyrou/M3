@@ -8,7 +8,7 @@ from api.modules.preprocess import preprocessing, ethically_loose_preprocessing
 df = pd.read_sql_table(
     table_name='clients',
     con=engine,
-    parse_dates=['date_creation_compte']  
+    parse_dates=['date_creation_compte'],
 )
 
 _, _, preprocessor = preprocessing(df)

@@ -21,5 +21,6 @@ class Client(Base):
     loyer_mensuel = Column(Float, nullable=True)
     montant_pret = Column(Float, nullable=True)
     date_creation_compte = Column(String, nullable=True) # Changed to String for pandas compatibility
-    # nb_enfants = Column(Integer, nullable=True)
-    # quotient_caf = Column(Float, nullable=True)
+    # new data columns
+    nb_enfants = Column(Integer, nullable=True)
+    quotient_caf = Column(Float, nullable=True)
