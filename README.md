@@ -58,14 +58,20 @@ L'entraînement des modèles se fait via le script Python dédié. Voici les ét
 
 Deux types de prétraitement ont été testés :
 - **Préprocessing éthique** : respect strict des contraintes éthiques et RGPD.
-  - **Score R² obtenu** : 0.27
+  - **Score R² obtenu** : 0.24
 - **Préprocessing lâche éthiquement** : moins de contraintes, plus de variables sensibles utilisées.
-  - **Score R² obtenu** : 0.36
+  - **Score R² obtenu** : 0.33
 
 ### 2. Modèles sur les nouvelles données
 
 Un nouveau modèle a été entraîné en se basant sur le précédent, mais avec deux nouvelles features ajoutées aux données.  
-Les scores R² pour ces nouveaux modèles seront fournis ultérieurement.
+- **Préprocessing éthique** : respect strict des contraintes éthiques et RGPD.
+  - **Score R² obtenu** : 0.38
+- **Préprocessing lâche éthiquement** : moins de contraintes, plus de variables sensibles utilisées.
+  - **Score R² obtenu** : 0.47
+
+### Conclusion
+On note une amélioration des performances pour les 2 types de modèles avec les nouvelles données.
 
 #### Exemple de commande pour entraîner un modèle :
 ```bash

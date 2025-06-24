@@ -73,9 +73,9 @@ def preprocessing(df):
     df['loyer_mensuel_missing_value'] = df['loyer_mensuel'].isna().astype(int)
     df['situation_familiale_missing_value'] = df['situation_familiale'].isna().astype(int)
 
-    numerical_cols = ['age', 'taille', 'poids', 'revenu_estime_mois', 'risque_personnel', 'loyer_mensuel', 'historique_credits',
+    numerical_cols = ['revenu_estime_mois', 'risque_personnel', 'loyer_mensuel', 'historique_credits',
                        'score_credit']
-    # numerical_cols = numerical_cols + ['quotient_caf', 'nb_enfants'] # colonnes ajoutées par les nouvelles données
+    numerical_cols = numerical_cols + ['quotient_caf', 'nb_enfants'] # colonnes ajoutées par les nouvelles données
     categorical_cols = ['age_group', 'sport_licence', 'niveau_etude', 'region', 'situation_familiale',
                         'historique_credits_missing_value', 'score_credit_missing_value', 
                         'loyer_mensuel_missing_value', 'situation_familiale_missing_value']
@@ -118,10 +118,12 @@ def ethically_loose_preprocessing(df):
     df['score_credit_missing_value'] = df['score_credit'].isna().astype(int)
     df['loyer_mensuel_missing_value'] = df['loyer_mensuel'].isna().astype(int)
     df['situation_familiale_missing_value'] = df['situation_familiale'].isna().astype(int)
+    df['quotient_caf_missing_value'] = df['quotient_caf'].isna().astype(int)
+    df['nb_enfants_missing_value'] = df['nb_enfants'].isna().astype(int)
 
     numerical_cols = ['age', 'taille', 'poids', 'revenu_estime_mois', 'risque_personnel', 'loyer_mensuel', 'historique_credits',
                        'score_credit']
-    # numerical_cols = numerical_cols + ['quotient_caf', 'nb_enfants'] # colonnes ajoutées par les nouvelles données
+    numerical_cols = numerical_cols + ['quotient_caf', 'nb_enfants'] # colonnes ajoutées par les nouvelles données
     categorical_cols = ['smoker', 'sport_licence', 'niveau_etude', 'region', 'situation_familiale',
                         'historique_credits_missing_value', 'score_credit_missing_value', 
                         'loyer_mensuel_missing_value', 'situation_familiale_missing_value']
