@@ -9,12 +9,12 @@ from api.modules.models import model_predict
 from api.database import get_db
 from api.models import Client as ClientModel
 from api.schemas import Client as ClientSchema
-from api.config import DEFAULT_MODEL_PATH
-from api.modules.preprocess import preprocessing, ethically_loose_preprocessing
+from api.config import DEFAULT_MODEL_PATH, DEFAULT_PREPROCESSOR_PATH
+from api.modules.preprocess import apply_manual_transformations
 
 router = APIRouter(prefix='/api')
 
-# preprocessor = joblib.load(DEFAULT_PREPROCESSOR_PATH)
+preprocessor = joblib.load(DEFAULT_PREPROCESSOR_PATH)
 model = tf.keras.models.load_model(DEFAULT_MODEL_PATH)
 
 @router.get('/')
@@ -69,7 +69,9 @@ async def delete_client(client_id: int, db: Session = Depends(get_db)):
 async def predict(client_data: ClientSchema, db: Session = Depends(get_db)):
     """Prédit le risque de crédit pour un client donné"""
     try:
-        processed_client = ethically_loose_preprocessing(pd.DataFrame([client_data.model_dump()]))
+        df = pd.DataFrame([client_data.model_dump()])
+        manually_processed_client = apply_manual_transformations(df)
+        processed_client = preprocessor.transform(manually_processed_client)
         prediction_array = model_predict(model, processed_client)
         prediction_value = round(prediction_array[0],2)
         logger.info(f'prediction: {prediction_value} avec le client suivant : {client_data}')

@@ -19,9 +19,9 @@ NiveauEtude = Literal[
     'aucun',
     ]
 SituationFamiliale = Literal['veuf', 'marié', 'célibataire', 'divorcé']
-Sexe = Literal['H','F']
 
 class Client(BaseModel):
+    age: int
     sport_licence: bool
     niveau_etude: NiveauEtude
     region: Region
@@ -32,4 +32,6 @@ class Client(BaseModel):
     score_credit: float
     loyer_mensuel: float
     montant_pret: float
+    date_creation_compte: str
     nb_enfants: int
+    quotient_caf: float
