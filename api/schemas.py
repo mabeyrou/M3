@@ -22,15 +22,9 @@ SituationFamiliale = Literal['veuf', 'marié', 'célibataire', 'divorcé']
 Sexe = Literal['H','F']
 
 class Client(BaseModel):
-    age: int
-    taille: float
-    poids: float
-    sexe: Sexe
     sport_licence: bool
     niveau_etude: NiveauEtude
     region: Region
-    smoker: bool
-    nationalité_francaise: bool
     revenu_estime_mois: int
     situation_familiale: SituationFamiliale
     historique_credits: float
@@ -38,3 +32,4 @@ class Client(BaseModel):
     score_credit: float
     loyer_mensuel: float
     montant_pret: float
+    nb_enfants: int
