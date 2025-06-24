@@ -72,6 +72,8 @@ def preprocessing(df):
     df['score_credit_missing_value'] = df['score_credit'].isna().astype(int)
     df['loyer_mensuel_missing_value'] = df['loyer_mensuel'].isna().astype(int)
     df['situation_familiale_missing_value'] = df['situation_familiale'].isna().astype(int)
+    df['quotient_caf_missing_value'] = df['quotient_caf'].isna().astype(int)
+    df['nb_enfants_missing_value'] = df['nb_enfants'].isna().astype(int)
 
     numerical_cols = ['revenu_estime_mois', 'risque_personnel', 'loyer_mensuel', 'historique_credits',
                        'score_credit']

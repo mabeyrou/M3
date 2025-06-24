@@ -11,8 +11,8 @@ df = pd.read_sql_table(
     parse_dates=['date_creation_compte'],
 )
 
-_, _, preprocessor = preprocessing(df)
-_, _, ethically_loose_preprocessor = ethically_loose_preprocessing(df)
+_, _, preprocessor = preprocessing(df.tail(10000))
+_, _, ethically_loose_preprocessor = ethically_loose_preprocessing(df.tail(10000))
 
 joblib.dump(preprocessor, join(".", "models", "new_ethically_strict_preprocessor.pkl"))
 joblib.dump(ethically_loose_preprocessor, join(".", "models", "new_ethically_loose_preprocessor.pkl"))
